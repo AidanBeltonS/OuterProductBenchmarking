@@ -1,11 +1,10 @@
-// Combined shared-memory + vectorized outer product benchmark
+// MFMA outer product benchmark with shared-memory stores
 
 #include <cassert>
 #include <chrono>
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
-#include <numeric>
 #include <vector>
 
 #include <hip/hip_fp16.h>
@@ -23,11 +22,6 @@ constexpr size_t iterations_before_sync = 1;
   }
 
 int ceil_div(int x, int y) { return (x + y - 1) / y; }
-
-size_t align_up(size_t value, size_t alignment) {
-  assert(alignment != 0 && (alignment & (alignment - 1)) == 0);
-  return (value + alignment - 1) & ~(alignment - 1);
-}
 
 // Calculate throughput in GiB/s from bytes transferred and time in nanoseconds
 double calculate_throughput_gibps(size_t bytes, size_t time_ns) {
@@ -97,7 +91,7 @@ bool verify_outer_product(const T *C_host, const T *a_host, const T *b_host,
 
 constexpr int n_compute_units = 256;
 
-// Use Row major layout
+// Use row-major layout
 // Outer product kernel: C[i][j] = a[i] * b[j]
 // C is n x n, a is n elements, b is n elements
 template <typename T, size_t N>
@@ -301,11 +295,8 @@ int main() {
   // n is the vector size; output matrix is n x n
   std::vector<int> sizes{64,   128,  256,      512,      1024,     2048,
                          4096, 8192, 2 * 8192, 4 * 8192, 8 * 8192};
-  //std::vector<int> sizes{4*8192};
 
-  //run_benchmark_suite<half>("half", sizes, warmups, iterations);
   run_benchmark_suite<float>("float", sizes, warmups, iterations);
-  //run_benchmark_suite<double>("double", sizes, warmups, iterations);
 
   return 0;
 }

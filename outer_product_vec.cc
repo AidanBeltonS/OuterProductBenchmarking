@@ -3,7 +3,6 @@
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
-#include <numeric>
 #include <vector>
 
 #include <hip/hip_fp16.h>
@@ -91,7 +90,7 @@ constexpr int n_warps = 8;
 constexpr int warp_size = 64;
 constexpr int max_block_size = n_warps * warp_size;
 
-// Use Row major layout
+// Use row-major layout
 // Outer product kernel: C[i][j] = a[i] * b[j]
 // C is n x n, a is n elements, b is n elements
 
@@ -144,13 +143,6 @@ public:
       // Strides equal the total number of threads in each dimension
       size_t stride_x = total_n_threads_x;
       size_t stride_y = total_n_threads_y;
-      //std::cout << "n_passes_x: " << n_passes_x << ", n_passes_y: " << n_passes_y << std::endl;
-      //std::cout << "stride_x: " << stride_x << ", stride_y: " << stride_y << std::endl;
-      //std::cout << "block.x: " << block.x << ", block.y: " << block.y << std::endl;
-      //std::cout << "grid.x: " << grid.x << ", grid.y: " << grid.y << std::endl;
-      //std::cout << "n_compute_units: " << n_compute_units << std::endl;
-      //std::cout << "n: " << n << std::endl;
-      //std::cout << "n_vec: " << n_vec << std::endl;
       outer_product_kernel<T, vec_size><<<grid, block, 0, stream>>>(
           (my_vec<T, vec_size> *)C, (my_vec<T, vec_size> *)a, (my_vec<T, vec_size> *)b, n_vec,
           n_passes_x, n_passes_y, stride_x, stride_y);

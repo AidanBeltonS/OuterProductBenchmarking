@@ -5,7 +5,6 @@
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
-#include <numeric>
 #include <vector>
 
 #include <hip/hip_fp16.h>
@@ -96,7 +95,7 @@ constexpr int n_warps = 8;
 constexpr int warp_size = 64;
 constexpr int max_block_size = n_warps * warp_size;
 
-// Use Row major layout
+// Use row-major layout
 // Outer product kernel: C[i][j] = a[i] * b[j]
 // C is n x n, a is n elements, b is n elements
 

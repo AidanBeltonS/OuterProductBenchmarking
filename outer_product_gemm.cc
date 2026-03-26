@@ -3,7 +3,6 @@
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
-#include <numeric>
 #include <vector>
 
 #include <hip/hip_runtime.h>

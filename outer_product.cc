@@ -3,7 +3,6 @@
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
-#include <numeric>
 #include <vector>
 
 #include <hip/hip_fp16.h>
@@ -91,7 +90,7 @@ constexpr int n_warps = 8;
 constexpr int warp_size = 64;
 constexpr int max_block_size = n_warps * warp_size;
 
-// Use Row major layout
+// Use row-major layout
 // Outer product kernel: C[i][j] = a[i] * b[j]
 // C is n x n, a is n elements, b is n elements
 template <typename T>
@@ -217,7 +216,7 @@ template <typename T>
 void run_benchmark_suite(const std::string &type_name,
                          const std::vector<int> &sizes, int warmups,
                          int iterations) {
-  std::cout << "Outer Product Kernel Benchmark (naive approach" << type_name << ")"
+  std::cout << "Outer Product Kernel Benchmark (naive approach, " << type_name << ")"
             << std::endl;
   std::cout << "n, Matrix Size (n x n), Time (ns), Throughput (GiB/s), TFLOPS, "
                "Verified"
